@@ -1,0 +1,33 @@
+bin := "xmake_criterion"
+
+default: run
+
+run *args: build
+    xmake run {{ bin }} {{ args }}
+
+build:
+    xmake f -m debug
+    xmake build {{ bin }}
+    xmake project -k compile_commands
+
+release:
+    xmake f -m release
+    xmake build {{ bin }}
+
+clean:
+    xmake clean
+
+dev *args:
+    watchexec -e c,h just run {{ args }}
+
+open:
+    gh repo view --web
+
+debug *args: build
+    xmake run -d {{ bin }} {{ args }}
+
+build_tests:
+    xmake build tests
+
+test *args: build_tests
+    xmake run tests -j0 {{ args }}
